@@ -1,0 +1,49 @@
+version: "3.8"
+networks:
+  backend:
+    driver: bridge
+services:
+  data:
+    restart: always
+    image: postgres
+    container_name: chatbot
+    ports:
+      - "${PG_PORT}:5432"
+    networks:
+      - backend
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DATABASE=${PG_DATABASE}
+    volumes:
+      - ./db_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD", "pg_isready", "-p", "${PG_PORT}", "-U", "${PG_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  # backend:
+  #   build: .
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - OLLAMA_HOST=http://host.docker.internal:11434
+  #     - OLLAMA_MODEL=llama3
+  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
+  #   volumes:
+  #     - ./models:/app/models
+  #     - ./data:/app/data
+
+  # frontend:
+  #   build: .
+  #   command: streamlit run app/ui.py --server.port=8501 --server.enableCORS=false
+  #   ports:
+  #     - "8501:8501"
+  #   environment:
+  #     - OLLAMA_HOST=http://host.docker.internal:11434
+  #     - OLLAMA_MODEL=llama3
+  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
+  #   volumes:
+  #     - ./models:/app/models
+  #     - ./data:/app/data

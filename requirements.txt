@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+faiss-cpu
+sentence-transformers
+streamlit==1.48.0
+requests
+openai=1.99.1
+pypdf
+psycopg==3.2.9
+psycopg[binary]==3.2.9
+pandas==2.3.1
